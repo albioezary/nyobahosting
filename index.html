@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate GSAP & Lenis Effects</title>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@latest/dist/lenis.min.js"></script>
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: "Jost", sans-serif; background: #111; color: white; overflow-x: hidden; }
+
+        /* Cursor Effect */
+        .cursor {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            opacity: 0;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 50px;
+        }
+
+        .gallery img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Flip Card */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px;
+        }
+
+        .card {
+            width: 250px;
+            height: 350px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+        .card-front {
+            background: #333;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-back {
+            background: #00d4ff;
+            color: black;
+            font-size: 1.2rem;
+            transform: rotateY(180deg);
+        }
+
+        /* Sticky Section */
+        .sticky-section {
+            height: 200vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .sticky-content {
+            position: sticky;
+            top: 50%;
+            font-size: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1 class="hero-text">Welcome to Ultimate Effects</h1>
+    </div>
+
+    <!-- Image Gallery -->
+    <div class="gallery">
+        <img src="https://source.unsplash.com/300x200/?nature" alt="Image 1">
+        <img src="https://source.unsplash.com/300x200/?technology" alt="Image 2">
+        <img src="https://source.unsplash.com/300x200/?abstract" alt="Image 3">
+    </div>
+
+    <!-- Flip Cards -->
+    <div class="card-container">
+        <div class="card">
+            <div class="card-front">Front</div>
+            <div class="card-back">Back Info</div>
+        </div>
+        <div class="card">
+            <div class="card-front">Front</div>
+            <div class="card-back">Back Info</div>
+        </div>
+        <div class="card">
+            <div class="card-front">Front</div>
+            <div class="card-back">Back Info</div>
+        </div>
+    </div>
+
+    <!-- Sticky Scroll Section -->
+    <div class="sticky-section">
+        <div class="sticky-content">This text stays in place while you scroll!</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const lenis = new Lenis({ smooth: true });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Cursor Effect
+            const cursor = document.querySelector(".cursor");
+            document.addEventListener("mousemove", (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            });
+
+            // Hero Text Animation
+            gsap.from(".hero-text", {
+                opacity: 0,
+                y: 50,
+                duration: 1.5,
+                ease: "power3.out",
+                delay: 0.5
+            });
+
+            // Sticky Section Animation
+            gsap.to(".sticky-content", {
+                scale: 1.5,
+                scrollTrigger: {
+                    trigger: ".sticky-section",
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: true
+                }
+            });
+
+            // Gallery Image Hover Effect
+            document.querySelectorAll(".gallery img").forEach((img) => {
+                img.addEventListener("mouseover", () => {
+                    gsap.to(img, { scale: 1.2, duration: 0.3 });
+                });
+
+                img.addEventListener("mouseleave", () => {
+                    gsap.to(img, { scale: 1, duration: 0.3 });
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
